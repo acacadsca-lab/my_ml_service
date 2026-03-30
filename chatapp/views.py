@@ -753,47 +753,54 @@ def setup_env():
             "--index-url", "https://download.pytorch.org/whl/cpu"
         ])
 
+import os
+import subprocess
+from django.http import JsonResponse, FileResponse
+from django.views import View
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
+
 @method_decorator(csrf_exempt, name='dispatch')
 class VoiceCloneqwenView(View):
-    """
-    Class-based view for voice cloning.
-    Accepts POST requests with text, ref_text, and audio file.
-    """
-    def get(self, request):        
+
+    def get(self, request):
         return render(request, 'qwenaudio.html')
 
     def post(self, request, *args, **kwargs):
-        print("--------------------HOLA AMIGO------------------")
+        print("--------------------REQUEST START------------------")
+
         try:
-            # Ensure environment is set up
-            print("TRY-------------------------")
             setup_env()
 
-            # Extract POST parameters
             text = request.POST.get("text")
-            print("Received text:", text)
-            ref_text = request.POST.get("ref_text",'Hello, how are you?')
-            print("Received ref_text:", ref_text)
+            ref_text = request.POST.get("ref_text", "Hello, how are you?")
             audio_file = request.FILES.get("audio_path")
-            print("Received audio file:", audio_file)  
 
-            if not all([text, ref_text, audio_file]):
-                return JsonResponse(
-                    {"error": "Missing required fields: text, ref_text, audio"},
-                    status=400
-                )
+            print("TEXT:", text)
+            print("REF_TEXT:", ref_text)
+            print("AUDIO:", audio_file)
 
-            # Save uploaded audio temporarily
+            if not text or not audio_file:
+                return JsonResponse({
+                    "error": "Missing required fields"
+                }, status=400)
+
+            # Save file
+            os.makedirs("/tmp", exist_ok=True)
             audio_path = f"/tmp/{audio_file.name}"
-            print("Saving uploaded audio to:", audio_path)
+
             with open(audio_path, "wb+") as f:
                 for chunk in audio_file.chunks():
                     f.write(chunk)
 
-            # Run the TTS subprocess
+            print("Saved audio:", audio_path)
+
+            # 🔥 Run subprocess safely
             result = subprocess.run(
                 [
                     PYTHON_PATH,
+                    "-u",  # IMPORTANT: unbuffered output
                     "qwen3.py",
                     audio_path,
                     text,
@@ -802,21 +809,53 @@ class VoiceCloneqwenView(View):
                 capture_output=True,
                 text=True
             )
-            print("Subprocess STDOUT:", result.stdout)
-            print("Subprocess STDERR:", result.stderr)
 
+            stdout = result.stdout or ""
+            stderr = result.stderr or ""
+
+            print("STDOUT:", stdout)
+            print("STDERR:", stderr)
+
+            # ❗ If subprocess crashed → return error immediately
             if result.returncode != 0:
-                return JsonResponse({"error": result.stderr}, status=500)
+                return JsonResponse({
+                    "error": "TTS subprocess failed",
+                    "stdout": stdout,
+                    "stderr": stderr
+                }, status=500)
 
-            output_audio_path = result.stdout.strip()
-            if not os.path.exists(output_audio_path):
-                return JsonResponse({"error": "Output audio file not found"}, status=500)
+            # 🔥 Extract output safely
+            output_path = None
 
-            # Return the generated audio file
-            return FileResponse(open(output_audio_path, "rb"), content_type="audio/wav")
+            for line in stdout.splitlines():
+                if "FINAL_OUTPUT:" in line:
+                    output_path = line.split("FINAL_OUTPUT:")[1].strip()
+
+            if not output_path:
+                return JsonResponse({
+                    "error": "Output path not found",
+                    "stdout": stdout,
+                    "stderr": stderr
+                }, status=500)
+
+            if not os.path.exists(output_path):
+                return JsonResponse({
+                    "error": "Generated file not found",
+                    "path": output_path
+                }, status=500)
+
+            print("SUCCESS OUTPUT:", output_path)
+
+            return FileResponse(
+                open(output_path, "rb"),
+                content_type="audio/wav"
+            )
 
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+            print("EXCEPTION:", str(e))
+            return JsonResponse({
+                "error": str(e)
+            }, status=500)
         
 
 
