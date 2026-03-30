@@ -1,0 +1,8 @@
+# Project root folder-la (manage.py irukka idathula)
+cd ~/my_ml_service/backend/aichatproject
+
+# Create runtime.txt
+echo "python-3.11.9" > runtime.txt
+
+# Verify
+cat runtime.txt
