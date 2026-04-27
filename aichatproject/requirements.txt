@@ -1,0 +1,36 @@
+# 🔹 Django stack
+Django==4.2.11
+gunicorn==21.2.0
+whitenoise==6.6.0
+dj-database-url==2.1.0
+python-decouple==3.8
+psycopg2-binary==2.9.9
+sqlparse==0.4.4
+asgiref==3.7.2
+packaging==23.2
+
+# 🔹 AI / ML core
+torch==2.2.2
+transformers==4.40.2
+huggingface_hub==0.23.4
+diffusers==0.27.2
+sentence-transformers==2.6.1
+
+# 🔹 Audio / speech
+librosa==0.10.1
+pyannote.audio==3.1.1
+
+# 🔹 LangChain ecosystem
+langchain==0.1.20
+langchain_core==0.1.52
+langchain_community==0.0.38
+langchain_huggingface==0.0.3
+pypdf
+
+# 🔹 Utilities
+PyPDF2==3.0.1
+g4f==0.2.6.1
+
+# 🔹 Optional / experimental
+gguf
+imaginairy

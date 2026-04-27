@@ -1,0 +1,67 @@
+{% extends 'bloom_base.html' %}
+
+{% block title %}{% if is_login %}Login{% else %}Register{% endif %} - Bloom Blog{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <!-- Decorative flowers -->
+        <div class="auth-flowers">
+            <span class="auth-flower af1">🌸</span>
+            <span class="auth-flower af2">🌺</span>
+            <span class="auth-flower af3">🌷</span>
+        </div>
+        
+        <div class="auth-header">
+            <a href="{% url 'home' %}" class="back-home">← Back to Home</a>
+            <h1 class="auth-title">
+                {% if is_login %}
+                    Welcome Back 🌸
+                {% else %}
+                    Join Us 🌺
+                {% endif %}
+            </h1>
+            <p class="auth-subtitle">
+                {% if is_login %}
+                    Let your thoughts bloom again
+                {% else %}
+                    Start your blooming journey
+                {% endif %}
+            </p>
+        </div>
+        
+        <form method="POST" class="auth-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="username">Username</label>
+                {{ form.username }}
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                {{ form.password }}
+            </div>
+            
+            {% if not is_login %}
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                {{ form.confirm_password }}
+            </div>
+            {% endif %}
+            
+            <button type="submit" class="auth-btn">
+                {% if is_login %}Login{% else %}Create Account{% endif %}
+            </button>
+        </form>
+        
+        <div class="auth-switch">
+            {% if is_login %}
+                <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+            {% else %}
+                <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

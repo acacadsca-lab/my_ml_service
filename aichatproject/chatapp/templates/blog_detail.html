@@ -1,0 +1,56 @@
+{% extends 'bloom_base.html' %}
+
+{% block title %}{{ blog.topic }} - Bloom Blog{% endblock %}
+
+{% block content %}
+<div class="blog-detail-container">
+    <nav class="navbar transparent">
+        <div class="nav-brand">
+            <a href="{% url 'home' %}">
+                <span class="brand-flower">🌸</span>
+                <span class="brand-text">Bloom Blog</span>
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'home' %}" class="nav-link">Home</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'my_blogs' %}" class="nav-link">My Blogs</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <article class="blog-detail">
+        <header class="blog-header">
+            <div class="blog-meta">
+                <span class="blog-visibility {{ blog.visibility }}">
+                    {% if blog.visibility == 'private' %}🔒 Private{% else %}🌍 Public{% endif %}
+                </span>
+                <span class="blog-date">{{ blog.created_at|date:"F d, Y" }}</span>
+                <span class="blog-reading-time">{{ blog.get_reading_time }} min read</span>
+            </div>
+            
+            <h1 class="blog-title">{{ blog.topic }}</h1>
+            
+            <div class="blog-author">
+                <span class="author-avatar large">{{ blog.author.username|slice:":1"|upper }}</span>
+                <div class="author-info">
+                    <span class="author-name">{{ blog.author.username }}</span>
+                    <span class="author-label">Author</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="blog-content">
+            {{ blog.content|linebreaks }}
+        </div>
+
+        <footer class="blog-footer">
+            <div class="blog-flowers">
+                🌸 🌺 🌷
+            </div>
+            <p>Thank you for reading</p>
+            <a href="{% url 'home' %}" class="back-to-home">← Back to Home</a>
+        </footer>
+    </article>
+</div>
+{% endblock %}

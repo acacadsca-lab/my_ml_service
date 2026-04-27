@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{% block title %}ShopKart - Online Shopping for Electronics, Fashion & More{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Banner Slider -->
+    <div class="banner-slider mb-4">
+        <div class="swiper bannerSwiper">
+            <div class="swiper-wrapper">
+                {% for banner in banners %}
+                <div class="swiper-slide">
+                    <a href="{{ banner.link }}">
+                        <img src="{{ banner.image.url }}" alt="{{ banner.title }}">
+                    </a>
+                </div>
+                {% empty %}
+                <div class="swiper-slide">
+                    <img src="https://via.placeholder.com/1200x300/2874f0/ffffff?text=Welcome+to+ShopKart" alt="Banner">
+                </div>
+                {% endfor %}
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </div>
+    
+    <!-- Categories -->
+    <div class="mb-4">
+        <div class="section-header">
+            <h2 class="section-title">Shop by Category</h2>
+            <a href="/product_list/" class="btn btn-primary btn-sm">View All</a>
+        </div>
+        <div class="section-content">
+            <div class="row g-3">
+                {% for category in categories %}
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="category-card">
+                        <a href="{% url 'category' slug=category.slug %}">
+                            {% if category.image %}
+                                <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                            {% else %}
+                                <img src="https://via.placeholder.com/100?text={{ category.name|slice:':1' }}" alt="{{ category.name }}">
+                            {% endif %}
+                            <h6>{{ category.name }}</h6>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Featured Products -->
+    {% if featured_products %}
+    <div class="mb-4">
+        <div class="section-header">
+            <h2 class="section-title"><i class="bi bi-lightning-fill text-warning"></i> Featured Deals</h2>
+            <a href="/product_list/?featured=true" class="btn btn-primary btn-sm">View All</a>
+        </div>
+        <div class="section-content">
+            <div class="swiper productSwiper">
+                <div class="swiper-wrapper">
+                    {% for product in featured_products %}
+                    <div class="swiper-slide">
+                        {% include 'products/partials/product_card.html' %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Best Sellers -->
+    {% if bestsellers %}
+    <div class="mb-4">
+        <div class="section-header">
+            <h2 class="section-title"><i class="bi bi-trophy-fill text-warning"></i> Best Sellers</h2>
+            <a href="/product_list/?bestseller=true" class="btn btn-primary btn-sm">View All</a>
+        </div>
+        <div class="section-content">
+            <div class="row g-3">
+                {% for product in bestsellers %}
+                <div class="col-6 col-md-4 col-lg-3">
+                    {% include 'products/partials/product_card.html'%}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- New Arrivals -->
+    {% if new_arrivals %}
+    <div class="mb-4">
+        <div class="section-header">
+            <h2 class="section-title"><i class="bi bi-stars text-warning"></i> New Arrivals</h2>
+            <a href="/product_list/?sort=newest" class="btn btn-primary btn-sm">View All</a>
+        </div>
+        <div class="section-content">
+            <div class="row g-3">
+                {% for product in new_arrivals %}
+                <div class="col-6 col-md-4 col-lg-3">
+                    {% include 'products/partials/product_card.html/' %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Banner Swiper
+    new Swiper('.bannerSwiper', {
+        loop: true,
+        autoplay: {
+            delay: 4000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+    
+    // Product Swiper
+    new Swiper('.productSwiper', {
+        slidesPerView: 2,
+        spaceBetween: 15,
+        breakpoints: {
+            640: { slidesPerView: 3 },
+            768: { slidesPerView: 4 },
+            1024: { slidesPerView: 5 },
+        },
+    });
+</script>
+{% endblock %}
+
+
+
+<div class="product-card">
+    <div class="product-image">
+        {% if product.discount_percentage > 0 %}
+            <span class="discount-badge">{{ product.discount_percentage }}% OFF</span>
+        {% endif %}
+        
+        {% if user.is_authenticated %}
+        <button class="wishlist-btn {% if product.id in user_wishlist %}active{% endif %}" 
+                onclick="toggleWishlist(`{{ product.id }}`, this)">
+            <i class="bi bi-heart{% if product.id in user_wishlist %}-fill text-danger{% endif %}"></i>
+        </button>
+        {% endif %}
+        
+        <a href="{{ product.get_absolute_url }}">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+                <img src="https://via.placeholder.com/200?text=No+Image" alt="{{ product.name }}">
+            {% endif %}
+        </a>
+    </div>
+    
+    <div class="product-info">
+        {% if product.brand %}
+            <span class="product-brand">{{ product.brand.name }}</span>
+        {% endif %}
+        
+        <h3 class="product-title">
+            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+        </h3>
+        
+        <div class="d-flex align-items-center mb-2">
+            {% if product.average_rating > 0 %}
+                <span class="product-rating">
+                    {{ product.average_rating|floatformat:1 }}
+                    <i class="bi bi-star-fill"></i>
+                </span>
+                <span class="rating-count">({{ product.review_count }})</span>
+            {% endif %}
+        </div>
+        
+        <div class="product-price">
+            <span class="current-price">₹{{ product.price|floatformat:0 }}</span>
+            {% if product.compare_price %}
+                <span class="original-price">₹{{ product.compare_price|floatformat:0 }}</span>
+                <span class="discount-text">{{ product.discount_percentage }}% off</span>
+            {% endif %}
+        </div>
+        
+        {% if not product.in_stock %}
+            <p class="text-danger mt-2 mb-0"><small>Out of Stock</small></p>
+        {% endif %}
+    </div>
+</div>

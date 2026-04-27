@@ -1,0 +1,112 @@
+{% extends 'bloom_base.html' %}
+
+{% block title %}Writing: {{ topic }} - Bloom Blog{% endblock %}
+
+{% block content %}
+<div class="write-container">
+    <!-- Flower Animation Container -->
+    <div class="flower-container" id="flowerContainer">
+        <svg class="bloom-flower" id="bloomFlower" viewBox="0 0 200 200">
+            <!-- Center of flower -->
+            <circle class="flower-center" cx="100" cy="100" r="15" fill="#FFD93D"/>
+            
+            <!-- Petals - will scale on typing -->
+            <g class="petals-group" id="petalsGroup">
+                <!-- Petal 1 -->
+                <ellipse class="petal p1" cx="100" cy="60" rx="18" ry="35" fill="#FFB5C2"/>
+                <!-- Petal 2 -->
+                <ellipse class="petal p2" cx="140" cy="80" rx="18" ry="35" fill="#FFC2D1" transform="rotate(72 100 100)"/>
+                <!-- Petal 3 -->
+                <ellipse class="petal p3" cx="130" cy="130" rx="18" ry="35" fill="#FFB5C2" transform="rotate(144 100 100)"/>
+                <!-- Petal 4 -->
+                <ellipse class="petal p4" cx="70" cy="130" rx="18" ry="35" fill="#FFC2D1" transform="rotate(216 100 100)"/>
+                <!-- Petal 5 -->
+                <ellipse class="petal p5" cx="60" cy="80" rx="18" ry="35" fill="#FFB5C2" transform="rotate(288 100 100)"/>
+                
+                <!-- Inner petals -->
+                <ellipse class="petal inner ip1" cx="100" cy="70" rx="12" ry="25" fill="#FF9AAB"/>
+                <ellipse class="petal inner ip2" cx="130" cy="90" rx="12" ry="25" fill="#FF9AAB" transform="rotate(72 100 100)"/>
+                <ellipse class="petal inner ip3" cx="120" cy="125" rx="12" ry="25" fill="#FF9AAB" transform="rotate(144 100 100)"/>
+                <ellipse class="petal inner ip4" cx="80" cy="125" rx="12" ry="25" fill="#FF9AAB" transform="rotate(216 100 100)"/>
+                <ellipse class="petal inner ip5" cx="70" cy="90" rx="12" ry="25" fill="#FF9AAB" transform="rotate(288 100 100)"/>
+            </g>
+            
+            <!-- Sparkles -->
+            <g class="sparkles" id="sparkles">
+                <circle class="sparkle s1" cx="50" cy="50" r="2" fill="#FFD93D"/>
+                <circle class="sparkle s2" cx="150" cy="40" r="2" fill="#FFD93D"/>
+                <circle class="sparkle s3" cx="160" cy="150" r="2" fill="#FFD93D"/>
+                <circle class="sparkle s4" cx="40" cy="140" r="2" fill="#FFD93D"/>
+                <circle class="sparkle s5" cx="100" cy="30" r="2" fill="#FFD93D"/>
+            </g>
+        </svg>
+        
+        <p class="bloom-hint" id="bloomHint">Start typing to see the flower bloom 🌱</p>
+    </div>
+
+    <!-- Writing Area -->
+    <div class="writing-area">
+        <header class="write-header">
+            <a href="{% url 'home' %}" class="back-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back
+            </a>
+            <h1 class="write-topic">{{ topic }}</h1>
+        </header>
+
+        <form method="POST" class="write-form" id="writeForm">
+            {% csrf_token %}
+            
+            <div class="textarea-wrapper">
+                <textarea 
+                    name="content" 
+                    id="blogContent" 
+                    class="blog-textarea"
+                    placeholder="Let your thoughts flow like petals in the wind..."
+                    required
+                >{% if form.content.value %}{{ form.content.value }}{% endif %}</textarea>
+                
+                <div class="word-count">
+                    <span id="wordCount">0</span> words
+                </div>
+            </div>
+
+            <div class="publish-options">
+                <div class="visibility-options">
+                    <label class="visibility-label">
+                        <input type="radio" name="visibility" value="public" checked>
+                        <span class="visibility-box public-box">
+                            <span class="visibility-icon">🌍</span>
+                            <span class="visibility-text">Public</span>
+                            <span class="visibility-desc">Everyone can read</span>
+                        </span>
+                    </label>
+                    
+                    <label class="visibility-label">
+                        <input type="radio" name="visibility" value="private">
+                        <span class="visibility-box private-box">
+                            <span class="visibility-icon">🔒</span>
+                            <span class="visibility-text">Private</span>
+                            <span class="visibility-desc">Only you can read</span>
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit" class="publish-btn" id="publishBtn">
+                    <span class="btn-text">Publish Blog</span>
+                    <span class="btn-flower">🌸</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize bloom animation
+    initBloomAnimation();
+</script>
+{% endblock %}
