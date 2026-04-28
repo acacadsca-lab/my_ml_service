@@ -81,13 +81,13 @@ WSGI_APPLICATION = 'aichatproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL', default='postgresql://aichat_user:ELnsrrIzhiAlypYwiKGRtmTDuI0CXfx7@dpg-d71sqjpaae7s73fm6c2g-a.singapore-postgres.render.com/aichat_db_urd3'),
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=config('DATABASE_URL', default='postgresql://aichat_user:ELnsrrIzhiAlypYwiKGRtmTDuI0CXfx7@dpg-d71sqjpaae7s73fm6c2g-a.singapore-postgres.render.com/aichat_db_urd3'),
+#         conn_max_age=600,
+#         conn_health_checks=True,
+#     )
+# }
 
 # # Step 1: Connect to PostgreSQL
 # sudo -u postgres psql
@@ -117,12 +117,12 @@ DATABASES = {
 #     )
 # }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
