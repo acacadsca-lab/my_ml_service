@@ -47,8 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'aichatprojectfinal.chatapp',
-    'aichatprojectfinal.memorybot',
+    'chatapp',
+    'memorybot',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
