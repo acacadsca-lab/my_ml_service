@@ -34,3 +34,4 @@ g4f==0.2.6.1
 # 🔹 Optional / experimental
 gguf
 imaginairy
+pollinations
