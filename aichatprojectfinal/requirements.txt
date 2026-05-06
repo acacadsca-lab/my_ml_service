@@ -34,3 +34,4 @@ gguf
 pollinations
 django-permissions-policy
 django-cors-headers
+pollinations.ai
