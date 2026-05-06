@@ -205,19 +205,13 @@
             <button class="upload-btn" onclick="uploadPDF()">📤 Upload & Process</button>
             <div id="uploadStatus"></div>
         </div>
-        
+          
         <div class="chat-section" id="chatSection">
             <p style="text-align:center; color:#adb5bd;">Upload a PDF to start chatting...</p>
         </div>
         
         <div class="input-section">
-            <input 
-                type="text" 
-                id="questionInput" 
-                placeholder="Ask a question about your PDF..." 
-                disabled
-                onkeypress="if(event.key==='Enter') askQuestion()"
-            >
+            <input type="text" id="questionInput" placeholder="Ask a question about your PDF..." disabledonkeypress="if(event.key==='Enter') askQuestion()">
             <button class="send-btn" onclick="askQuestion()" disabled id="sendBtn">Send</button>
         </div>
     </div>
