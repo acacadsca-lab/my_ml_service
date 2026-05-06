@@ -132,7 +132,7 @@ class IndexView(View):
 class ImagegenView(View):
 
     def get(self, request):
-        return JsonResponse({"message": "Image API Ready ✅"})
+        return render(request,'imagegen.html')
 
     def post(self, request):
         import pollinations
