@@ -134,24 +134,34 @@ class ImagegenView(View):
 
     def post(self, request):
         try:
-            data = json.loads(request.body)
+            if request.content_type == "application/json":
+                data = json.loads(request.body)
+            else:
+                data = request.POST  # fallback
+
             prompt = data.get("prompt", "")
+
             if not prompt:
                 return JsonResponse({"error": "No prompt provided"}, status=400)
+
             pipe = get_pipeline()
             pipe.enable_attention_slicing()
-            result = pipe(prompt,num_inference_steps=100, guidance_scale=7.5)
+
+            result = pipe(prompt, num_inference_steps=30, guidance_scale=7.5)
             image = result.images[0]
+
             buffer = BytesIO()
             image.save(buffer, format="PNG")
             buffer.seek(0)
+
             image_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
             return JsonResponse({
                 "success": True,
                 "image_url": image_base64
             })
+
         except Exception as e:
-            print(f"Error generating image: {e}")
             return JsonResponse({
                 "success": False,
                 "message": str(e)
