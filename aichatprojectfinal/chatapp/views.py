@@ -84,15 +84,7 @@ def load(self, path):
     )
     
 
-def get_pipeline():
-    global pipe
-    if pipe is None:
-        pipe = StableDiffusionPipeline.from_pretrained(
-            "segmind/small-sd",
-            torch_dtype=torch.float32
-        )
-        pipe = pipe.to("cpu" if torch.cuda.is_available() else "cpu")
-    return pipe
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class IndexView(View):
