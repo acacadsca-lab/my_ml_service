@@ -10,10 +10,8 @@ asgiref==3.7.2
 packaging==23.2
 
 # 🔹 AI / ML core
-torch==2.9.0
 transformers==4.40.2
 huggingface_hub==0.23.4
-diffusers==0.27.2
 sentence-transformers==2.6.1
 
 # 🔹 Audio / speech
@@ -33,4 +31,5 @@ g4f==0.2.6.1
 
 # 🔹 Optional / experimental
 gguf
-imaginairy
+django-permissions-policy
+django-cors-headers
