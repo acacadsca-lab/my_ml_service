@@ -31,7 +31,5 @@ g4f==0.2.6.1
 
 # 🔹 Optional / experimental
 gguf
-pollinations
 django-permissions-policy
 django-cors-headers
-pollinations.ai
