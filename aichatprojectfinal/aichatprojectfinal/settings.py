@@ -42,6 +42,7 @@ DEBUG = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    "corsheaders",
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -49,7 +50,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chatapp',
     'memorybot',
-    "corsheaders",
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

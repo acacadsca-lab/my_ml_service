@@ -8,8 +8,6 @@ import uuid
 from django.http import JsonResponse, HttpResponse
 import tempfile
 from chatapp.models import ChatHistory, PDFDocument
-from imaginairy.api import imagine
-from imaginairy.schema import ImaginePrompt
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views import View
@@ -127,7 +125,7 @@ class ImagegenView(View):
         return render(request,'imagegen.html')
 
     def post(self, request):
-        import pollinations
+
         try:
             data = json.loads(request.body)
             prompt = data.get("prompt", "")
