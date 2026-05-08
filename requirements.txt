@@ -10,6 +10,7 @@ asgiref==3.7.2
 packaging==23.2
 
 # 🔹 AI / ML core
+diffusers
 transformers==4.40.2
 huggingface_hub==0.23.4
 sentence-transformers==2.6.1
